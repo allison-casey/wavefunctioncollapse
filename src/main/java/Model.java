@@ -31,7 +31,7 @@ abstract class Model {
     protected Random random;
     protected int FMX, FMY, T;
     protected boolean periodic;
-    protected double[] weights;
+    protected long[] weights;
     double[] weightLogWeights;
 
     int[] sumsOfOnes;
@@ -69,6 +69,12 @@ abstract class Model {
 
         return 0;
 
+    }
+    
+    public static long toPower(int a, int n) {
+    	long product = 1;
+    	for(int i = 0; i < n; i++) product *= a;
+    	return product;
     }
 
     void Init() {
@@ -134,7 +140,7 @@ abstract class Model {
         double[] distribution = new double[this.T];
         for (int t = 0; t < this.T; t++)
             distribution[t] = this.wave[argmin][t] ? this.weights[t] : 0;
-        int r = this.randomIndice(distribution, this.random.nextDouble());
+        int r = Model.randomIndice(distribution, this.random.nextDouble());
 
         boolean[] w = this.wave[argmin];
         for (int t = 0; t < this.T; t++)
@@ -171,8 +177,8 @@ abstract class Model {
             int y1 = i1 / this.FMX;
 
             for (int d = 0; d < 4; d++) {
-                int dx = this.DX[d], dy = this.DY[d];
-                int x2 = x1 + dx, y2 = y1 + dx;
+                int dx = Model.DX[d], dy = Model.DY[d];
+                int x2 = x1 + dx, y2 = y1 + dy;
 
                 if (this.OnBoundary(x2, y2)) continue;
 
@@ -219,7 +225,7 @@ abstract class Model {
                 this.wave[i][t] = true;
                 for (int d =0; d < 4; d++)
                     this.compatible[i][t][d] =
-                        this.propagator[this.oppposite[d]][t].length;
+                        this.propagator[Model.oppposite[d]][t].length;
             }
 
             this.sumsOfOnes[i] = this.weights.length;
