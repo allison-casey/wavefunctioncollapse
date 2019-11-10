@@ -1,10 +1,10 @@
 import java.util.*;
 import java.util.function.*;
-import java.awt.image.BufferedImage;;
+import java.awt.image.BufferedImage;
 import java.awt.Color;
 
 
-class OverlappingModel extends Model {
+public class OverlappingModel extends Model {
     int N;
     Integer[][] patterns;
     int ground;
@@ -41,13 +41,14 @@ class OverlappingModel extends Model {
 //                    data[indexPixel + 2],
 //                    data[indexPixel + 3]
 //                );
-            	int color = data.getRGB(x, y);
+            	Color color = new Color(data.getRGB(x, y));
                 
                 int i = this.colors.indexOf(color);
-                if (i != -1) colors.add(new Color(color));
+                if (i == -1) colors.add(color);
                 
-                sample[x][y] = i;
+                sample[x][y] = i != -1 ? i : 0;
             }
+        
         int C = this.colors.size();
         long W = OverlappingModel.toPower(C, this.N * this.N);
         
@@ -117,14 +118,15 @@ class OverlappingModel extends Model {
         		
         		for (int k = 0; k < symmetry; k++) {
         			long ind = index.apply(ps[k]);
-        			if (weights.containsKey(ind)) weights.put(ind, weights.get(ind) + 1);
+        			if (weights.containsKey(ind)) 
+        				weights.put(ind, weights.get(ind) + 1);
         			else {
         				weights.put(ind, 1);
         				ordering.add(ind);
         			}
         		}
         	}
-        
+                
         this.T = weights.size();
         this.ground = (ground + this.T) % this.T;
         this.patterns = new Integer[this.T][];
@@ -134,7 +136,8 @@ class OverlappingModel extends Model {
         
         for (long w : ordering) {
         	this.patterns[counter] = patternFromIndex.apply(w);
-        	this.weights[counter] = this.weights[(int) w];
+        	this.weights[counter] = weights.get(w);
+//        	weights[counter] = weights[(int) w];
         	counter++;
         }
         
@@ -168,21 +171,20 @@ class OverlappingModel extends Model {
         }
     }
 
-
     protected boolean OnBoundary(int x, int y) {
         return !this.periodic && (x + this.N > this.FMX || y + this.N > this.FMY || x < 0 || y < 0);
     }
     
-    public BufferedImage graphics() {
+    public BufferedImage Graphics() {
     	BufferedImage result = new BufferedImage(this.FMX, this.FMY, BufferedImage.TYPE_INT_RGB);
-    	int[] bitmapData = new int[result.getHeight() * result.getWidth()];
+//    	int[] bitmapData = new int[result.getHeight() * result.getWidth()];
     	
     	if (this.observed != null) {
     		for(int y = 0; y < this.FMY; y++) {
     			int dy = y < this.FMY - this.N + 1 ? 0 : this.N - 1;
     			for(int x = 0; x < this.FMX; x++) {
     				int dx = x < this.FMX - this.N + 1 ? 0 : this.N - 1;
-    				Color c = this.colors.get(this.patterns[x - dx + (y - dy) * this.FMX][dx + dy * this.N]);
+    				Color c = this.colors.get(this.patterns[this.observed[x - dx + (y - dy) * this.FMX]][dx + dy * this.N]);
     				
     				result.setRGB(x, y, c.getRGB());
 //    				bitmapData[x + y * this.FMX] = (int)0xff000000 | (c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue();

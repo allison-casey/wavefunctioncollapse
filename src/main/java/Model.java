@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.lang.Math;
 import java.util.Random;
 
@@ -45,7 +46,7 @@ abstract class Model {
     }
 
     protected abstract boolean OnBoundary(int x, int y);
-    // public abstract System.Drawing.Bitmap Graphics() <- C#
+    public abstract BufferedImage Graphics();
 
     protected static int[] DX = {-1, 0, 1, 0};
     protected static int[] DY = {0, 1, 0, -1};
@@ -53,21 +54,32 @@ abstract class Model {
 
     static int randomIndice(double[] arr, double r) {
         double sum = 0;
+
+        for (int j = 0; j < arr.length; j++)
+            sum += arr[j];
+        
+        for (int j = 0; j < arr.length; j++) 
+        	arr[j] /= sum;
+        
+
+        int i = 0;
         double x = 0;
-        int i;
 
-        for (i = 0; i < arr.length; i++)
-            sum += arr[i];
-
-        i = 0;
-        double rr = r * sum;
         while (i < arr.length) {
-            x += arr[i];
-            if (rr <= x) return i;
-            i++;
+        	x += arr[i];
+        	if (r <= x) return i;
+        	i++;
         }
-
+        
         return 0;
+//        double rr = r * sum;
+//        while (i < arr.length) {
+//            x += arr[i];
+//            if (rr <= x) return i;
+//            i++;
+//        }
+//
+//        return 0;
 
     }
     
@@ -103,12 +115,13 @@ abstract class Model {
         this.sumsOfWeights = new double[this.FMX * this.FMY];
         this.sumsOfWeightLogWeights = new double[this.FMX * this.FMY];
         this.entropies = new double[this.FMX * this.FMY];
+        
         this.stack = new StackEntry[this.wave.length * this.T];
         this.stacksize = 0;
     }
 
     Boolean Observe() {
-        double min = 1e3;
+        double min = 1e+3;
         int argmin = -1;
 
         for (int i = 0; i < this.wave.length; i++) {
@@ -120,19 +133,21 @@ abstract class Model {
             double entropy = this.entropies[i];
             if (amount > 1 && entropy <= min) {
                 double noise = 1e-6 * this.random.nextDouble();
-                if (entropy  + noise < min) {
+                if (entropy + noise < min) {
                     min = entropy + noise;
                     argmin = i;
                 }
             }
         }
-
+        
+        
         if (argmin == -1) {
             this.observed = new int[this.FMX * this.FMY];
             for (int i = 0; i < this.wave.length; i++)
                 for (int t = 0; t < this.T; t++)
                     if (this.wave[i][t]) {
-                        this.observed[i] = t; break;
+                        this.observed[i] = t; 
+                        break;
                     }
             return true;
         }
@@ -146,7 +161,6 @@ abstract class Model {
         for (int t = 0; t < this.T; t++)
             if (w[t] != (t == r))
                 this.Ban(argmin, t);
-
 
         return null;
     }
@@ -196,7 +210,7 @@ abstract class Model {
                     int[] comp = compat[t2];
 
                     comp[d]--;
-                    if (comp[2] == 0) this.Ban(i2, t2);
+                    if (comp[d] == 0) this.Ban(i2, t2);
                 }
             }
         }
