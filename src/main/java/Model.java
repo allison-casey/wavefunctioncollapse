@@ -45,8 +45,8 @@ abstract class Model {
         this.FMY = height;
     }
 
-    protected abstract boolean OnBoundary(int x, int y);
-    public abstract BufferedImage Graphics();
+    protected abstract boolean onBoundary(int x, int y);
+    public abstract BufferedImage graphics();
 
     protected static int[] DX = {-1, 0, 1, 0};
     protected static int[] DY = {0, 1, 0, -1};
@@ -89,7 +89,7 @@ abstract class Model {
     	return product;
     }
 
-    void Init() {
+    void init() {
         this.wave = new boolean[this.FMX * this.FMY][];
         this.compatible = new int[this.wave.length][][];
         for (int i = 0; i < wave.length; i++) {
@@ -120,12 +120,12 @@ abstract class Model {
         this.stacksize = 0;
     }
 
-    Boolean Observe() {
+    Boolean observe() {
         double min = 1e+3;
         int argmin = -1;
 
         for (int i = 0; i < this.wave.length; i++) {
-            if (this.OnBoundary(i % this.FMX, i / this.FMX)) continue;
+            if (this.onBoundary(i % this.FMX, i / this.FMX)) continue;
 
             int amount = this.sumsOfOnes[i];
             if (amount == 0) return false;
@@ -160,12 +160,12 @@ abstract class Model {
         boolean[] w = this.wave[argmin];
         for (int t = 0; t < this.T; t++)
             if (w[t] != (t == r))
-                this.Ban(argmin, t);
+                this.ban(argmin, t);
 
         return null;
     }
 
-    protected void Ban(int i, int t) {
+    protected void ban(int i, int t) {
         this.wave[i][t] = false;
 
         int[] comp = this.compatible[i][t];
@@ -181,7 +181,7 @@ abstract class Model {
         this.entropies[i] = Math.log(sum) - this.sumsOfWeightLogWeights[i] / sum;
     }
 
-    protected void Propagate() {
+    protected void propagate() {
         while (this.stacksize > 0) {
             StackEntry e1 = this.stack[this.stacksize - 1];
             this.stacksize--;
@@ -194,7 +194,7 @@ abstract class Model {
                 int dx = Model.DX[d], dy = Model.DY[d];
                 int x2 = x1 + dx, y2 = y1 + dy;
 
-                if (this.OnBoundary(x2, y2)) continue;
+                if (this.onBoundary(x2, y2)) continue;
 
                 if (x2 < 0) x2 += this.FMX;
                 else if (x2 >= this.FMX) x2 -= this.FMX;
@@ -210,22 +210,22 @@ abstract class Model {
                     int[] comp = compat[t2];
 
                     comp[d]--;
-                    if (comp[d] == 0) this.Ban(i2, t2);
+                    if (comp[d] == 0) this.ban(i2, t2);
                 }
             }
         }
     }
 
     public boolean Run(int seed, int limit) {
-        if (this.wave == null) this.Init();
+        if (this.wave == null) this.init();
 
         this.Clear();
         this.random = new Random(seed);
 
         for (int l = 0; l < limit || limit == 0; l++) {
-            Boolean result = this.Observe();
+            Boolean result = this.observe();
             if (result != null) return (boolean) result;
-            this.Propagate();
+            this.propagate();
         }
 
         return true;
