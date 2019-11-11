@@ -27,7 +27,7 @@ public class Main {
 
       System.out.println("Finished: " + finished);
 
-      BufferedImage output = model.Graphics();
+      BufferedImage output = model.graphics();
 
       File output_file = new File("image_out.png");
       ImageIO.write(output, "png", output_file);

@@ -141,13 +141,13 @@ public class OverlappingModel extends Model {
     this.T = weights.size();
     this.ground = (ground + this.T) % this.T;
     this.patterns = new Integer[this.T][];
-    this.weights = new long[this.T];
+    this.weights = new Double[this.T];
 
     int counter = 0;
 
     for (long w : ordering) {
       this.patterns[counter] = patternFromIndex.apply(w);
-      this.weights[counter] = weights.get(w);
+      this.weights[counter] = (double)weights.get(w);
 
       //        	weights[counter] = weights[(int) w];
       counter++;

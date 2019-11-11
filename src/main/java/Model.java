@@ -32,7 +32,7 @@ abstract class Model {
     protected Random random;
     protected int FMX, FMY, T;
     protected boolean periodic;
-    protected long[] weights;
+    protected Double[] weights;
     double[] weightLogWeights;
 
     int[] sumsOfOnes;
