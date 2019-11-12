@@ -1,4 +1,5 @@
 package wavefunctioncollapse;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -48,13 +49,15 @@ public class SimpleTiledModel extends Model {
     //    if (subsetName && data.subsets && !!data.subsets[subsetName]) {
     //        subset = data.subsets[subsetName];
     //    }
-    
-    List<String> subset = null;    
-        if (subsetName != null && subsetsData != null && subsetsData.containsKey(subsetName)) {
-           subset = Arrays.asList(subsetsData.get(subsetName));
-        }
+    List<String> subset = null;
+    if (
+      subsetName != null &&
+      subsetsData != null &&
+      subsetsData.containsKey(subsetName)
+    ) {
+      subset = Arrays.asList(subsetsData.get(subsetName));
+    }
 
-    
     Function<BiFunction<Integer, Integer, Color>, Color[]> tile =
       (BiFunction<Integer, Integer, Color> f) -> {
         Color[] result = new Color[this.tilesize * this.tilesize];
@@ -187,9 +190,12 @@ public class SimpleTiledModel extends Model {
         .stream(xneighbor.get("right").split(" "))
         .filter(x -> x.isEmpty())
         .toArray(String[]::new);
-      
-      if (subset != null && (!subset.contains(left[0]) || !subset.contains(right[0]))) continue;
-      
+
+      if (
+        subset != null &&
+        (!subset.contains(left[0]) || !subset.contains(right[0]))
+      ) continue;
+
       int L = action.get(firstOccurrence.get(left[0]))[left.length == 1 ? 0
           : Integer.valueOf(left[1])];
       int D = action.get(L)[1];
