@@ -1,3 +1,4 @@
+package wavefunctioncollapse;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -25,7 +26,7 @@ public class OverlappingModel extends Model {
    * @param symmetry Allowed symmetries from 1 (no symmetry) to 8 (all mirrored / rotated variations).
    * @param ground Id of the specific pattern to use as the bottom of the generation.
    */
-  OverlappingModel(
+  public OverlappingModel(
     BufferedImage data,
     int N,
     int width,
@@ -147,7 +148,7 @@ public class OverlappingModel extends Model {
 
     for (long w : ordering) {
       this.patterns[counter] = patternFromIndex.apply(w);
-      this.weights[counter] = (double)weights.get(w);
+      this.weights[counter] = (double) weights.get(w);
 
       //        	weights[counter] = weights[(int) w];
       counter++;

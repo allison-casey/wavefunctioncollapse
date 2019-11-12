@@ -1,3 +1,4 @@
+package wavefunctioncollapse;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -267,25 +268,30 @@ public class SimpleTiledModel extends Model {
               .filter(idx -> a[idx])
               .mapToDouble(idx -> this.weights[idx])
               .sum();
-        
-        for (int yt = 0; yt < this.tilesize; yt++)
-        	for(int xt = 0; xt < this.tilesize; xt++) {
-        		if (this.black && amount == this.T)
-        			result.setRGB(x * this.tilesize + xt, y * this.tilesize * yt, (int)0xff000000);
-        		else {
-        			double r = 0, g = 0, b = 0;
-        			for (int t = 0; t < this.T; t++)
-        				if(a[t]) {
-        					Color c = this.tiles.get(t)[xt + yt * this.tilesize];
-        					r += c.getRed() * this.weights[t] * lambda;
-        					g += c.getGreen() * this.weights[t] * lambda;
-        					b += c.getBlue() * this.weights[t] * lambda;
-        				}
-        			
-        			Color newColor = new Color((int)r, (int)g, (int)b);
-        			result.setRGB(x * tilesize + xt, y * tilesize + yt, newColor.getRGB());
-        		}
-        	}
+
+        for (int yt = 0; yt < this.tilesize; yt++) for (int xt = 0; xt <
+          this.tilesize; xt++) {
+          if (this.black && amount == this.T) result.setRGB(
+            x * this.tilesize + xt,
+            y * this.tilesize * yt,
+            (int) 0xff000000
+          ); else {
+            double r = 0, g = 0, b = 0;
+            for (int t = 0; t < this.T; t++) if (a[t]) {
+              Color c = this.tiles.get(t)[xt + yt * this.tilesize];
+              r += c.getRed() * this.weights[t] * lambda;
+              g += c.getGreen() * this.weights[t] * lambda;
+              b += c.getBlue() * this.weights[t] * lambda;
+            }
+
+            Color newColor = new Color((int) r, (int) g, (int) b);
+            result.setRGB(
+              x * tilesize + xt,
+              y * tilesize + yt,
+              newColor.getRGB()
+            );
+          }
+        }
       }
     }
 

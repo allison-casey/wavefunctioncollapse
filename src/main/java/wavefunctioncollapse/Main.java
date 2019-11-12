@@ -1,11 +1,10 @@
+package wavefunctioncollapse;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 import javax.imageio.ImageIO;
-
-import wavefunctioncollapse.OverlappingModel;
 
 public class Main {
 
