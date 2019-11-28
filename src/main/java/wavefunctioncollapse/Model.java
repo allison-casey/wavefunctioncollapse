@@ -1,4 +1,5 @@
 package wavefunctioncollapse;
+
 import java.awt.image.BufferedImage;
 import java.lang.Math;
 import java.util.Random;
@@ -128,8 +129,12 @@ abstract class Model {
 
       int amount = this.sumsOfOnes[i];
       if (amount == 0) return false;
+      
 
       double entropy = this.entropies[i];
+      
+//      System.out.println(entropy);
+      
       if (amount > 1 && entropy <= min) {
         double noise = 1e-6 * this.random.nextDouble();
         if (entropy + noise < min) {
@@ -138,8 +143,10 @@ abstract class Model {
         }
       }
     }
+    
 
     if (argmin == -1) {
+    	System.out.println("IN OBSERVED");
       this.observed = new int[this.FMX * this.FMY];
       for (int i = 0; i < this.wave.length; i++) for (int t = 0; t <
         this.T; t++) if (this.wave[i][t]) {
@@ -203,6 +210,7 @@ abstract class Model {
           int[] comp = compat[t2];
 
           comp[d]--;
+          
           if (comp[d] == 0) this.ban(i2, t2);
         }
       }
@@ -211,7 +219,7 @@ abstract class Model {
 
   public boolean Run(int seed, int limit) {
     if (this.wave == null) this.init();
-
+    
     this.Clear();
     this.random = new Random(seed);
 

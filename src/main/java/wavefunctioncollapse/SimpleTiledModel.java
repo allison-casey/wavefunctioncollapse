@@ -13,25 +13,25 @@ public class SimpleTiledModel extends Model {
   boolean black;
 
   /**
-   *
+   * 
    * @param tilesize
-   * @param tiles
-   * @param neighbors
+   * @param tilesData
+   * @param neighborsData
+   * @param subsetsData
    * @param tileData
-   * @param path
    * @param subsetName
    * @param width
    * @param height
    * @param periodic
    * @param black
+   * @param unique
    */
   public SimpleTiledModel(
     int tilesize,
-    HashMap<String, String>[] tilesData,
-    HashMap<String, String>[] neighborsData,
+    List<HashMap<String, String>> tilesData,
+    List<HashMap<String, String>> neighborsData,
     HashMap<String, String[]> subsetsData,
     HashMap<String, BufferedImage> tileData,
-    String path,
     String subsetName,
     int width,
     int height,
@@ -57,6 +57,7 @@ public class SimpleTiledModel extends Model {
     ) {
       subset = Arrays.asList(subsetsData.get(subsetName));
     }
+    
 
     Function<BiFunction<Integer, Integer, Color>, Color[]> tile =
       (BiFunction<Integer, Integer, Color> f) -> {
@@ -77,8 +78,8 @@ public class SimpleTiledModel extends Model {
 
     this.tiles = new ArrayList<Color[]>();
     this.tilenames = new ArrayList<String>();
+    
     List<Double> tempStationary = new ArrayList<Double>();
-
     List<Integer[]> action = new ArrayList<Integer[]>();
     HashMap<String, Integer> firstOccurrence = new HashMap<String, Integer>();
 
@@ -91,6 +92,7 @@ public class SimpleTiledModel extends Model {
       String sym = xtile.getOrDefault("symmetry", "X");
 
       if (subset != null && !subset.contains(tilename)) continue;
+      
       switch (sym) {
         case "L":
           cardinality = 4;
@@ -118,13 +120,13 @@ public class SimpleTiledModel extends Model {
           b = (Integer i) -> i;
           break;
       }
-
+      
       this.T = action.size();
       firstOccurrence.put(tilename, this.T);
 
-      int[][] map = new int[cardinality][];
+      Integer[][] map = new Integer[cardinality][];
       for (int t = 0; t < cardinality; t++) {
-        map[t] = new int[8];
+        map[t] = new Integer[8];
 
         map[t][0] = t;
         map[t][1] = a.apply(t);
@@ -136,8 +138,10 @@ public class SimpleTiledModel extends Model {
         map[t][7] = b.apply(a.apply(a.apply(a.apply(t))));
 
         for (int s = 0; s < 8; s++) map[t][s] += this.T;
+        
+        action.add(map[t]);
       }
-
+      
       if (unique) {
         for (int t = 0; t < cardinality; t++) {
           BufferedImage xtileData = tileData.get(tilename);
@@ -155,8 +159,9 @@ public class SimpleTiledModel extends Model {
               (Integer x, Integer y) -> new Color(xtileData.getRGB(x, y))
             )
           );
+        
         this.tilenames.add(String.format("%s 0", tilename));
-
+        
         for (int t = 1; t < cardinality; t++) {
           this.tiles.add(rotate.apply(this.tiles.get(this.T + t - 1)));
           this.tilenames.add(String.format("%s %s", tilename, t));
@@ -179,23 +184,26 @@ public class SimpleTiledModel extends Model {
       for (int t = 0; t < this.T; t++) tempPropagator[d][t] =
         new boolean[this.T];
     }
-
+    
+    
     for (HashMap<String, String> xneighbor : neighborsData) {
+    	
       String[] left = Arrays
         .stream(xneighbor.get("left").split(" "))
-        .filter(x -> x.isEmpty())
+        .filter(x -> !x.isEmpty())
         .toArray(String[]::new);
 
       String[] right = Arrays
         .stream(xneighbor.get("right").split(" "))
-        .filter(x -> x.isEmpty())
+        .filter(x -> !x.isEmpty())
         .toArray(String[]::new);
-
+      
       if (
         subset != null &&
         (!subset.contains(left[0]) || !subset.contains(right[0]))
       ) continue;
-
+      
+      
       int L = action.get(firstOccurrence.get(left[0]))[left.length == 1 ? 0
           : Integer.valueOf(left[1])];
       int D = action.get(L)[1];
@@ -203,7 +211,8 @@ public class SimpleTiledModel extends Model {
       int R = action.get(firstOccurrence.get(right[0]))[right.length == 1 ? 0
           : Integer.valueOf(right[1])];
       int U = action.get(R)[1];
-
+      
+      
       tempPropagator[0][R][L] = true;
       tempPropagator[0][action.get(R)[6]][action.get(L)[6]] = true;
       tempPropagator[0][action.get(L)[4]][action.get(R)[4]] = true;
@@ -212,9 +221,9 @@ public class SimpleTiledModel extends Model {
       tempPropagator[1][U][D] = true;
       tempPropagator[1][action.get(D)[6]][action.get(U)[6]] = true;
       tempPropagator[1][action.get(U)[4]][action.get(D)[4]] = true;
-      tempPropagator[1][action.get(U)[2]][action.get(D)[2]] = true;
+      tempPropagator[1][action.get(D)[2]][action.get(U)[2]] = true;
     }
-
+    
     for (int t2 = 0; t2 < this.T; t2++) for (int t1 = 0; t1 < this.T; t1++) {
       tempPropagator[2][t2][t1] = tempPropagator[0][t1][t2];
       tempPropagator[3][t2][t1] = tempPropagator[1][t1][t2];
@@ -222,22 +231,25 @@ public class SimpleTiledModel extends Model {
 
     ArrayList<ArrayList<ArrayList<Integer>>> sparsePropagator = new ArrayList<ArrayList<ArrayList<Integer>>>();
 
-    for (int d = 0; d < 4; d++) {
-      sparsePropagator.set(d, new ArrayList<ArrayList<Integer>>());
-      for (int t = 0; t < this.T; t++) sparsePropagator
-        .get(d)
-        .set(t, new ArrayList<Integer>());
+    for(int d = 0; d < 4; d++) {
+    	sparsePropagator.add(d, new ArrayList<ArrayList<Integer>>());
+    	for (int t = 0; t < this.T; t++) 
+    		sparsePropagator.get(d).add(t, new ArrayList<Integer>());
     }
 
     for (int d = 0; d < 4; d++) for (int t1 = 0; t1 < this.T; t1++) {
       ArrayList<Integer> sp = sparsePropagator.get(d).get(t1);
       boolean[] tp = tempPropagator[d][t1];
-
-      for (int t2 = 0; t2 < this.T; t2++) if (tp[t2]) sp.add(t2);
+            
+      for (int t2 = 0; t2 < this.T; t2++) {
+    	  if (tp[t2]) sp.add(t2);
+      }
+      
 
       int ST = sp.size();
       this.propagator[d][t1] = new int[ST];
       for (int st = 0; st < ST; st++) this.propagator[d][t1][st] = sp.get(st);
+      
     }
   }
 
@@ -245,14 +257,28 @@ public class SimpleTiledModel extends Model {
   protected boolean onBoundary(int x, int y) {
     return !this.periodic && (x < 0 || y < 0 || x >= this.FMX || y >= this.FMY);
   }
+  
+  public String textOutput() {
+	  StringBuilder result = new StringBuilder();
+	  
+	  for (int y = 0; y < this.FMY; y++) {
+		  for (int x = 0; x < this.FMX; x++) 
+			  result.append(String.format("{%s}, ", this.tilenames.get(this.observed[x + y * this.FMX])));
+		  result.append("\n");
+	  }
+	  
+	  return result.toString();
+  }
 
   @Override
   public BufferedImage graphics() {
     BufferedImage result = new BufferedImage(
-      this.FMX,
-      this.FMY,
+      this.FMX * this.tilesize,
+      this.FMY * this.tilesize,
       BufferedImage.TYPE_INT_RGB
     );
+    
+    System.out.println(this.observed);
 
     if (this.observed != null) {
       for (int x = 0; x < this.FMX; x++) for (int y = 0; y < this.FMY; y++) {
@@ -274,6 +300,8 @@ public class SimpleTiledModel extends Model {
           .range(0, a.length)
           .map(idx -> a[idx] ? 1 : 0)
           .sum();
+        
+        
         double lambda =
           1.0 /
             IntStream

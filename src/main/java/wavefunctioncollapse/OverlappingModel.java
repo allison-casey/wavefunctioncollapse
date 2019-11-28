@@ -1,4 +1,5 @@
 package wavefunctioncollapse;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -149,6 +150,7 @@ public class OverlappingModel extends Model {
     for (long w : ordering) {
       this.patterns[counter] = patternFromIndex.apply(w);
       this.weights[counter] = (double) weights.get(w);
+      System.out.println(this.weights[counter]);
 
       //        	weights[counter] = weights[(int) w];
       counter++;
@@ -168,6 +170,8 @@ public class OverlappingModel extends Model {
       };
 
     this.propagator = new int[4][][];
+    
+    System.out.println(this.T);
 
     for (int d = 0; d < 4; d++) {
       this.propagator[d] = new int[this.T][];
