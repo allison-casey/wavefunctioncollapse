@@ -264,7 +264,7 @@ public class OverlappingModel extends Model {
   }
 
   protected void Clear() {
-    super.Clear();
+    super.clear();
 
     if (this.ground != 0) {
       for (int x = 0; x < this.FMX; x++) {

@@ -1,8 +1,7 @@
 package wavefunctioncollapse;
 
-import static org.junit.Assert.*;
+//import static org.junit.Assert.*;
 
-import java.awt.image.BufferedImage;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

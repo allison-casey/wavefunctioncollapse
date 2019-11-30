@@ -2,6 +2,7 @@ package wavefunctioncollapse;
 
 import java.awt.image.BufferedImage;
 import java.lang.Math;
+import java.util.Arrays;
 import java.util.Random;
 
 class StackEntry {
@@ -71,14 +72,6 @@ abstract class Model {
     }
 
     return 0;
-  //        double rr = r * sum;
-  //        while (i < arr.length) {
-  //            x += arr[i];
-  //            if (rr <= x) return i;
-  //            i++;
-  //        }
-  //
-  //        return 0;
   }
 
   public static long toPower(int a, int n) {
@@ -132,9 +125,7 @@ abstract class Model {
       
 
       double entropy = this.entropies[i];
-      
-//      System.out.println(entropy);
-      
+            
       if (amount > 1 && entropy <= min) {
         double noise = 1e-6 * this.random.nextDouble();
         if (entropy + noise < min) {
@@ -159,7 +150,9 @@ abstract class Model {
     double[] distribution = new double[this.T];
     for (int t = 0; t < this.T; t++) distribution[t] =
       this.wave[argmin][t] ? this.weights[t] : 0;
+
     int r = Model.randomIndice(distribution, this.random.nextDouble());
+
 
     boolean[] w = this.wave[argmin];
     for (int t = 0; t < this.T; t++) if (w[t] != (t == r)) this.ban(argmin, t);
@@ -217,10 +210,10 @@ abstract class Model {
     }
   }
 
-  public boolean Run(int seed, int limit) {
+  public boolean run(int seed, int limit) {
     if (this.wave == null) this.init();
     
-    this.Clear();
+    this.clear();
     this.random = new Random(seed);
 
     for (int l = 0; l < limit || limit == 0; l++) {
@@ -232,7 +225,7 @@ abstract class Model {
     return true;
   }
 
-  protected void Clear() {
+  protected void clear() {
     for (int i = 0; i < this.wave.length; i++) {
       for (int t = 0; t < this.T; t++) {
         this.wave[i][t] = true;

@@ -25,7 +25,7 @@ public class Main {
         8,
         0
       );
-      boolean finished = model.Run(random.nextInt(), 0);
+      boolean finished = model.run(random.nextInt(), 0);
 
       System.out.println("Finished: " + finished);
 

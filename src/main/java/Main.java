@@ -1,7 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 import java.io.*;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +9,9 @@ import java.util.List;
 //import java.io.IOException;
 import java.util.Random;
 import javax.imageio.ImageIO;
-import javax.xml.parsers.*;
+//import javax.xml.parsers.*;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
+//import org.xml.sax.SAXException;
 import wavefunctioncollapse.OverlappingModel;
 import wavefunctioncollapse.SimpleTiledModel;
 
@@ -25,7 +25,7 @@ public class Main {
 	}
 	
 	static List<HashMap<String, String>> initTilesData() {
-	      List<HashMap<String, String>> tilesData = new ArrayList();
+	      List<HashMap<String, String>> tilesData = new ArrayList<HashMap<String, String>>();
 	      String[] pairs = new String[] {
 	    		  "corner", "L",
 	    		  "cross", "I",
@@ -48,7 +48,7 @@ public class Main {
 	}
 	
 	static List<HashMap<String, String>> initNeighborsData() {
-		List<HashMap<String, String>> neighborsData = new ArrayList();
+		List<HashMap<String, String>> neighborsData = new ArrayList<HashMap<String, String>>();
 	      String[] pairs = new String[] {
 	    		  "corner 1", "empty",
 	    		  "corner", "cross",
@@ -107,12 +107,12 @@ public class Main {
 	}
 	
 	static void runTiledModel() {
-		String subset = "Dense Fabric";
+		String subset = "Fabric";
 	    int width = 32;
 	    int height = 32;
 	    boolean periodic = true;
 
-	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    try {
 	      int tilesize = 10;
 	      
@@ -159,7 +159,8 @@ public class Main {
 	        false
 	      );
 	      
-	      Boolean finished = tiled_model.Run(random.nextInt(), 0);
+	      Boolean finished = tiled_model.run(random.nextInt(), 0);
+	      System.out.println(String.format("FINISHED: %s", finished));
 	      
 	      BufferedImage output = tiled_model.graphics();
 	      
@@ -188,7 +189,7 @@ public class Main {
 	    	          8,
 	    	          0
 	    	        );
-	    	        boolean finished = model.Run(random.nextInt(), 0);
+	    	        boolean finished = model.run(random.nextInt(), 0);
 	    	  
 	    	        System.out.println("Finished: " + finished);
 	    	  
