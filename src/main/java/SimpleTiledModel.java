@@ -1,4 +1,4 @@
-package wavefunctioncollapse;
+
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -278,7 +278,7 @@ public class SimpleTiledModel extends Model {
       BufferedImage.TYPE_INT_RGB
     );
     
-    System.out.println(this.observed);
+//    System.out.println(this.observed);
 
     if (this.observed != null) {
       for (int x = 0; x < this.FMX; x++) for (int y = 0; y < this.FMY; y++) {

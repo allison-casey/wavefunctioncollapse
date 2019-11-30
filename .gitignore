@@ -1,3 +1,6 @@
+settings.xml
+target/
+#
 # Compiled class file
 *.class
 

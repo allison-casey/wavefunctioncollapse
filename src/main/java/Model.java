@@ -1,4 +1,4 @@
-package wavefunctioncollapse;
+
 
 import java.awt.image.BufferedImage;
 import java.lang.Math;
@@ -137,7 +137,6 @@ abstract class Model {
     
 
     if (argmin == -1) {
-    	System.out.println("IN OBSERVED");
       this.observed = new int[this.FMX * this.FMY];
       for (int i = 0; i < this.wave.length; i++) for (int t = 0; t <
         this.T; t++) if (this.wave[i][t]) {
