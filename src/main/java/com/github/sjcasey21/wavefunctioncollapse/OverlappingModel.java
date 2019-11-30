@@ -1,3 +1,5 @@
+package com.github.sjcasey21.wavefunctioncollapse;
+
 
 
 import java.awt.Color;

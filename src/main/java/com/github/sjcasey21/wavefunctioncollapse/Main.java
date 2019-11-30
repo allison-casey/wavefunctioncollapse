@@ -1,4 +1,4 @@
-
+package com.github.sjcasey21.wavefunctioncollapse;
 
 import java.awt.image.BufferedImage;
 import java.awt.Image;
