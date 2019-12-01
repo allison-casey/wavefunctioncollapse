@@ -15,25 +15,25 @@ public class SimpleTiledModel extends Model {
   boolean black;
 
   /**
-   * 
-   * @param tilesize
-   * @param tilesData
-   * @param neighborsData
-   * @param subsetsData
-   * @param tileData
-   * @param subsetName
-   * @param width
-   * @param height
-   * @param periodic
-   * @param black
+   * Create a new instance of a Simple Tiled Model.
+   * @param tilesize Size of the tile images in pixels.
+   * @param tileSymmetries Array of Map of tilenames and their symmetries.
+   * @param neighborData Array of Map of left and right neighbor combinations.
+   * @param subsetData Map of Subset definitions.
+   * @param tileData Map of tile image data indexed by tilename.
+   * @param subsetName Name of the subset in subsetData to use.
+   * @param width Output width in tiles.
+   * @param height Output height in tiles.
+   * @param periodic Should the output generation be tileable.
+   * @param black 
    * @param unique
    */
   public SimpleTiledModel(
     int tilesize,
-    List<HashMap<String, String>> tilesData,
-    List<HashMap<String, String>> neighborsData,
-    HashMap<String, String[]> subsetsData,
-    HashMap<String, BufferedImage> tileData,
+    List<Map<String, String>> tileSymmetries,
+    List<Map<String, String>> neighborData,
+    Map<String, String[]> subsetData,
+    Map<String, BufferedImage> tileData,
     String subsetName,
     int width,
     int height,
@@ -45,19 +45,14 @@ public class SimpleTiledModel extends Model {
     this.periodic = periodic;
     this.black = black;
     this.tilesize = tilesize;
-
-    //    List<String> subset = null;
-    //  C# Subset initilization if applicable
-    //    if (subsetName && data.subsets && !!data.subsets[subsetName]) {
-    //        subset = data.subsets[subsetName];
-    //    }
+    
     List<String> subset = null;
     if (
       subsetName != null &&
-      subsetsData != null &&
-      subsetsData.containsKey(subsetName)
+      subsetData != null &&
+      subsetData.containsKey(subsetName)
     ) {
-      subset = Arrays.asList(subsetsData.get(subsetName));
+      subset = Arrays.asList(subsetData.get(subsetName));
     }
     
 
@@ -85,7 +80,7 @@ public class SimpleTiledModel extends Model {
     List<Integer[]> action = new ArrayList<Integer[]>();
     HashMap<String, Integer> firstOccurrence = new HashMap<String, Integer>();
 
-    for (HashMap<String, String> xtile : tilesData) {
+    for (Map<String, String> xtile : tileSymmetries) {
       String tilename = xtile.get("name");
 
       Function<Integer, Integer> a, b;
@@ -188,7 +183,7 @@ public class SimpleTiledModel extends Model {
     }
     
     
-    for (HashMap<String, String> xneighbor : neighborsData) {
+    for (Map<String, String> xneighbor : neighborData) {
     	
       String[] left = Arrays
         .stream(xneighbor.get("left").split(" "))

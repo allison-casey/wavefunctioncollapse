@@ -42,6 +42,7 @@ public class OverlappingModel extends Model {
     super(width, height);
     this.N = N;
     this.periodic = periodicInput;
+    
 
     int SMX = data.getWidth(), SMY = data.getHeight();
     Integer[][] sample = new Integer[SMX][SMY];
