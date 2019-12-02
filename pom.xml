@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.sjcasey21</groupId>
   <artifactId>wavefunctioncollapse</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
 
   <name>WaveFunctionCollapse</name>
   <description>Bitmap and tilemap generation from a single example with the help of ideas from quantum mechanics. Java port of mxgmn's wavefunctioncollapse library.</description>
