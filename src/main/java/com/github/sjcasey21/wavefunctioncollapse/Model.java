@@ -214,7 +214,7 @@ abstract class Model {
   public boolean run(int seed, int limit) {
     if (this.wave == null) this.init();
     
-    this.clear();
+    this.Clear();
     this.random = new Random(seed);
 
     for (int l = 0; l < limit || limit == 0; l++) {
@@ -226,7 +226,7 @@ abstract class Model {
     return true;
   }
 
-  protected void clear() {
+  protected void Clear() {
     for (int i = 0; i < this.wave.length; i++) {
       for (int t = 0; t < this.T; t++) {
         this.wave[i][t] = true;

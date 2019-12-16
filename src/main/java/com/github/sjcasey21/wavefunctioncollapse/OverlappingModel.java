@@ -41,7 +41,7 @@ public class OverlappingModel extends Model {
   ) {
     super(width, height);
     this.N = N;
-    this.periodic = periodicInput;
+    this.periodic = periodicOutput;
     
 
     int SMX = data.getWidth(), SMY = data.getHeight();
@@ -52,10 +52,13 @@ public class OverlappingModel extends Model {
     for (int y = 0; y < SMY; y++) for (int x = 0; x < SMX; x++) {
       Color color = new Color(data.getRGB(x, y));
 
-      int i = this.colors.indexOf(color);
-      if (i == -1) colors.add(color);
-
-      sample[x][y] = i != -1 ? i : 0;
+      int i = 0;
+      for (Color c : colors) {
+        if (c.equals(color)) break;
+        i++;
+      }
+      if (i == colors.size()) colors.add(color);
+      sample[x][y] = i;
     }
 
     int C = this.colors.size();
@@ -97,7 +100,7 @@ public class OverlappingModel extends Model {
 
     Function<Long, Integer[]> patternFromIndex =
       (Long ind) -> {
-        double residue = ind, power = W;
+        long residue = ind, power = W;
         Integer[] result = new Integer[this.N * this.N];
 
         for (int i = 0; i < result.length; i++) {
@@ -118,8 +121,8 @@ public class OverlappingModel extends Model {
     HashMap<Long, Integer> weights = new HashMap<Long, Integer>();
     List<Long> ordering = new ArrayList<Long>();
 
-    for (int y = 0; y < (this.periodic ? SMY : SMY - N + 1); y++) for (int x =
-      0; x < (this.periodic ? SMX : SMX - this.N + 1); x++) {
+    for (int y = 0; y < (periodicInput ? SMY : SMY - N + 1); y++) for (int x =
+      0; x < (periodicInput ? SMX : SMX - this.N + 1); x++) {
       Integer[][] ps = new Integer[8][];
 
       ps[0] = patternFromSample.apply(x, y);
@@ -267,7 +270,7 @@ public class OverlappingModel extends Model {
   }
 
   protected void Clear() {
-    super.clear();
+    super.Clear();
 
     if (this.ground != 0) {
       for (int x = 0; x < this.FMX; x++) {
