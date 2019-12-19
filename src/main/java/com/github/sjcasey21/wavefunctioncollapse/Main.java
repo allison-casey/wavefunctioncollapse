@@ -177,37 +177,34 @@ public class Main {
 	
 	static void runOverlappingModel() {
 	    try {
-	    	
-	    	Image knot = ImageIO.read(new File("lair3.png"));
-	    	        BufferedImage image_buffered = (BufferedImage) knot;
-	    	        Random random = new Random();
-	    	  
-	    	        OverlappingModel model = new OverlappingModel(
-	    	          image_buffered,
-	    	          3,
-	    	          32,
-	    	          32,
-	    	          true,
-	    	          false,
-	    	          8,
-	    	          0
-	    	        );
-	    	        boolean finished = model.run(random.nextInt(), 0);
-	    	  
-	    	        System.out.println("Finished: " + finished);
-	    	  
-	    	        BufferedImage output = model.graphics();
-	    	  
-	    	        File output_file = new File("image_out.png");
-	    	        ImageIO.write(output, "png", output_file);
-	      
+			BufferedImage image_buffered = ImageIO.read(new File("Flowers.png"));
+			Random random = new Random();
+
+			OverlappingModel model = new OverlappingModel(
+			  image_buffered,
+			  3,
+			  32,
+			  32,
+			  true,
+			  false,
+		  2,
+			102
+			);
+			boolean finished = model.run(random.nextInt(), 0);
+
+			System.out.println("Finished: " + finished);
+
+			BufferedImage output = model.graphics();
+
+			File output_file = new File("image_out.png");
+			ImageIO.write(output, "png", output_file);
 	    } catch (Exception e) {
 	      e.printStackTrace();
 	    }
 	}
 	
   public static void main(String[] args) {
-    runTiledModel();
-//    runOverlappingModel();
+//    runTiledModel();
+    runOverlappingModel();
   }
 }
